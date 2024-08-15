@@ -1,9 +1,33 @@
-import React from "react";
+import React, { Suspense, useRef } from "react";
 import Card from "../components/card";
+import { Canvas } from "@react-three/fiber";
+import {
+  AccumulativeShadows,
+  ContactShadows,
+  Decal,
+  Dodecahedron,
+  Environment,
+  Float,
+  Icosahedron,
+  Loader,
+  MeshRefractionMaterial,
+  MeshWobbleMaterial,
+  OrbitControls,
+  PresentationControls,
+  Sphere,
+  Text,
+  useProgress,
+} from "@react-three/drei";
+import test from "../../public/next.svg";
+import * as THREE from "three";
 
 type Props = {};
 
 export default function AboutMeContainer({}: Props) {
+  // const { loaded, total } = useProgress();
+
+  // console.log({ loaded, total }, "AboutMeContainer");
+
   const skills = [
     "React JS",
     "Next JS",
@@ -65,6 +89,62 @@ export default function AboutMeContainer({}: Props) {
           </div>
         ))}
       </div>
+      <div className="w-full h-64">
+        <Canvas>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+
+          {/* Sphere with MeshWobbleMaterial */}
+          <Suspense fallback={null}>
+            <Float floatingRange={[-0.2, 0.2]}>
+              <Environment preset="sunset" />
+
+              <Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
+                {/* <meshPhysicalMaterial
+                color="lightblue"
+                metalness={0.8} // Makes the material more reflective
+                roughness={0.2} // Lower roughness for a smoother, shinier surface
+                clearcoat={1} // Adds an additional layer of reflectiveness
+                clearcoatRoughness={0} // Makes the clearcoat layer smooth
+                envMapIntensity={1} // Controls the strength of the environment map reflection
+              /> */}
+                <MeshWobbleMaterial color={"#4b5563"} factor={0.5} speed={1} />
+                {/* <AccumulativeShadows color="black" frames={100} scale={10} /> */}
+                {/* <ContactShadows color={"#ffffff"} /> */}
+
+                {/* Decal Component */}
+                <DecalWrapper />
+              </Sphere>
+            </Float>
+          </Suspense>
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            minAzimuthAngle={-Math.PI / 4}
+            maxAzimuthAngle={Math.PI / 4}
+            minPolarAngle={Math.PI / 4}
+            maxPolarAngle={Math.PI / 2}
+          />
+        </Canvas>
+      </div>
     </section>
   );
 }
+
+const DecalWrapper = () => {
+  const decalRef = useRef<THREE.Mesh>(null);
+
+  const texture = new THREE.TextureLoader().load(
+    "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+  );
+
+  return (
+    <Decal
+      ref={decalRef}
+      position={[0, 0, 1]} // Position the decal on the surface of the sphere
+      rotation={[0, 0, 0]} // Rotation of the decal
+      scale={1} // Scale of the decal
+      map={texture}
+    />
+  );
+};

@@ -5,13 +5,16 @@ import {
   Center,
   Cloud,
   Float,
+  Loader,
   OrbitControls,
   PresentationControls,
   Sparkles,
+  useProgress,
 } from "@react-three/drei";
 import { Suspense } from "react";
 import Image from "next/image";
 import ProfileImage from "../../public/profile.jpeg";
+import { log } from "console";
 
 const ModelCanvas = dynamic(() => import("../components/model"), {
   ssr: false,
@@ -23,6 +26,10 @@ const RobotModel = dynamic(() => import("../components/robotModel"), {
 type Props = {};
 
 export default function HeroContainer({}: Props) {
+  // const { loaded, total } = useProgress();
+
+  // console.log({ loaded, total });
+
   return (
     <div className="flex h-screen flex-col items-center justify-between px-12 bg-slate-900 text-white relative">
       <div className="flex items-center flex-col  text-center h-screen justify-center absolute z-10">
@@ -79,6 +86,7 @@ export default function HeroContainer({}: Props) {
           enableRotate={false}
         />
       </Canvas>
+      <Loader />
     </div>
   );
 }
