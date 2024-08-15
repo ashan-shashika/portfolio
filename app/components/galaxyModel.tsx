@@ -15,7 +15,7 @@ const GalaxyModel = () => {
   scene.traverse((object) => {
     if ((object as THREE.Mesh).isMesh) {
       ((object as THREE.Mesh).material as THREE.MeshStandardMaterial).color.set(
-        "purple"
+        "rgb(6 182 212)"
       ); // Set the color to blue
     }
   });
